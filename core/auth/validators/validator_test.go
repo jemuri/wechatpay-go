@@ -16,7 +16,7 @@ import (
 	"github.com/agiledragon/gomonkey"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/consts"
+	"github.com/jemuri/wechatpay-go/core/consts"
 )
 
 type mockVerifier struct {

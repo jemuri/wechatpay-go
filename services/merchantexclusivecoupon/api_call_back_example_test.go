@@ -14,10 +14,10 @@ import (
 	"context"
 	"log"
 
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
-	"github.com/wechatpay-apiv3/wechatpay-go/services/merchantexclusivecoupon"
-	"github.com/wechatpay-apiv3/wechatpay-go/utils"
+	"github.com/jemuri/wechatpay-go/core"
+	"github.com/jemuri/wechatpay-go/core/option"
+	"github.com/jemuri/wechatpay-go/services/merchantexclusivecoupon"
+	"github.com/jemuri/wechatpay-go/utils"
 )
 
 func ExampleCallBackApiService_GetCouponNotify() {

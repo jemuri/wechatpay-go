@@ -14,10 +14,10 @@ import (
 	"context"
 	"log"
 
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
-	"github.com/wechatpay-apiv3/wechatpay-go/services/cashcoupons"
-	"github.com/wechatpay-apiv3/wechatpay-go/utils"
+	"github.com/jemuri/wechatpay-go/core"
+	"github.com/jemuri/wechatpay-go/core/option"
+	"github.com/jemuri/wechatpay-go/services/cashcoupons"
+	"github.com/jemuri/wechatpay-go/utils"
 )
 
 func ExampleCallBackUrlApiService_QueryCallback() {

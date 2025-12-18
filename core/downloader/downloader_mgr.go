@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/utils/task"
+	"github.com/jemuri/wechatpay-go/core"
+	"github.com/jemuri/wechatpay-go/utils/task"
 )
 
 const (

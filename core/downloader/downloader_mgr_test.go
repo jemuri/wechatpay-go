@@ -9,10 +9,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/downloader"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
-	"github.com/wechatpay-apiv3/wechatpay-go/utils"
+	"github.com/jemuri/wechatpay-go/core"
+	"github.com/jemuri/wechatpay-go/core/downloader"
+	"github.com/jemuri/wechatpay-go/core/option"
+	"github.com/jemuri/wechatpay-go/utils"
 )
 
 func TestAutoCertificateDownloader(t *testing.T) {

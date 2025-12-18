@@ -17,10 +17,10 @@ import (
 	neturl "net/url"
 	"strings"
 
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/consts"
-	"github.com/wechatpay-apiv3/wechatpay-go/services"
-	"github.com/wechatpay-apiv3/wechatpay-go/services/payments"
+	"github.com/jemuri/wechatpay-go/core"
+	"github.com/jemuri/wechatpay-go/core/consts"
+	"github.com/jemuri/wechatpay-go/services"
+	"github.com/jemuri/wechatpay-go/services/payments"
 )
 
 type NativeApiService services.Service

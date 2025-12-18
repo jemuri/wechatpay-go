@@ -7,7 +7,7 @@ import (
 	"crypto/rsa"
 	"testing"
 
-	"github.com/wechatpay-apiv3/wechatpay-go/utils"
+	"github.com/jemuri/wechatpay-go/utils"
 )
 
 const (

@@ -15,10 +15,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
-	"github.com/wechatpay-apiv3/wechatpay-go/services/partnerpayments/jsapi"
-	"github.com/wechatpay-apiv3/wechatpay-go/utils"
+	"github.com/jemuri/wechatpay-go/core"
+	"github.com/jemuri/wechatpay-go/core/option"
+	"github.com/jemuri/wechatpay-go/services/partnerpayments/jsapi"
+	"github.com/jemuri/wechatpay-go/utils"
 )
 
 func ExampleJsapiApiService_CloseOrder() {

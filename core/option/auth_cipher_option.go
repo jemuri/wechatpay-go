@@ -7,14 +7,14 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/auth/signers"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/auth/validators"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/auth/verifiers"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/cipher/ciphers"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/cipher/decryptors"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/cipher/encryptors"
-	"github.com/wechatpay-apiv3/wechatpay-go/core/downloader"
+	"github.com/jemuri/wechatpay-go/core"
+	"github.com/jemuri/wechatpay-go/core/auth/signers"
+	"github.com/jemuri/wechatpay-go/core/auth/validators"
+	"github.com/jemuri/wechatpay-go/core/auth/verifiers"
+	"github.com/jemuri/wechatpay-go/core/cipher/ciphers"
+	"github.com/jemuri/wechatpay-go/core/cipher/decryptors"
+	"github.com/jemuri/wechatpay-go/core/cipher/encryptors"
+	"github.com/jemuri/wechatpay-go/core/downloader"
 )
 
 type withAuthCipherOption struct{ settings core.DialSettings }

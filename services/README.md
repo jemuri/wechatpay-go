@@ -8,7 +8,7 @@
 | payments/app | APP 支付| ✔️ | |
 | payments/jsapi | JSAPI 支付| ✔️ | |
 | payments/native | Native 支付 | ✔️ | |
-| payments/h5 | H5 支付| ✔️ | |
+| pappayapply | 申请扣款| ✔️ | |
 | partnerpayments/app | APP 支付| | ✔️ |
 | partnerpayments/jsapi | JSAPI 支付| | ✔️|
 | partnerpayments/native | Native 支付 ||✔️|
