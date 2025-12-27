@@ -218,3 +218,156 @@ func (s *PapPayApplyApiService) doRequest(ctx context.Context, xmlStr string) (*
 	client := &http.Client{}
 	return client.Do(req)
 }
+
+// HandlePapPayNotify 处理扣款结果通知
+func (s *PapPayApplyApiService) HandlePapPayNotify(ctx context.Context, req *http.Request) (*PapPayNotifyRequest, *PapPayNotifyResponse, error) {
+	// 读取请求体
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		return nil, nil, fmt.Errorf("read request body failed: %w", err)
+	}
+	defer req.Body.Close()
+
+	// 解析 XML
+	var notifyReq PapPayNotifyRequest
+	err = xml.Unmarshal(body, &notifyReq)
+	if err != nil {
+		return nil, nil, fmt.Errorf("unmarshal request failed: %w", err)
+	}
+
+	// 验证签名
+	if notifyReq.ReturnCode == "SUCCESS" && notifyReq.ResultCode == "SUCCESS" {
+		if err := s.verifyNotifySign(&notifyReq); err != nil {
+			return nil, nil, fmt.Errorf("verify sign failed: %w", err)
+		}
+	}
+
+	// 返回成功响应
+	response := &PapPayNotifyResponse{
+		ReturnCode: "SUCCESS",
+		ReturnMsg:  "OK",
+	}
+
+	return &notifyReq, response, nil
+}
+
+// verifyNotifySign 验证通知签名
+func (s *PapPayApplyApiService) verifyNotifySign(req *PapPayNotifyRequest) error {
+	// 将结构体转换为 map，只对非空参数参与签名
+	params := make(map[string]string)
+
+	if req.ReturnCode != "" {
+		params["return_code"] = req.ReturnCode
+	}
+	if req.ReturnMsg != "" {
+		params["return_msg"] = req.ReturnMsg
+	}
+	if req.AppID != "" {
+		params["appid"] = req.AppID
+	}
+	if req.MchID != "" {
+		params["mch_id"] = req.MchID
+	}
+	if req.SubAppID != "" {
+		params["sub_appid"] = req.SubAppID
+	}
+	if req.SubMchID != "" {
+		params["sub_mch_id"] = req.SubMchID
+	}
+	if req.DeviceInfo != "" {
+		params["device_info"] = req.DeviceInfo
+	}
+	if req.NonceStr != "" {
+		params["nonce_str"] = req.NonceStr
+	}
+	if req.ResultCode != "" {
+		params["result_code"] = req.ResultCode
+	}
+	if req.ErrCode != "" {
+		params["err_code"] = req.ErrCode
+	}
+	if req.ErrCodeDes != "" {
+		params["err_code_des"] = req.ErrCodeDes
+	}
+	if req.OpenID != "" {
+		params["openid"] = req.OpenID
+	}
+	if req.SubOpenID != "" {
+		params["sub_openid"] = req.SubOpenID
+	}
+	if req.IsSubscribe != "" {
+		params["is_subscribe"] = req.IsSubscribe
+	}
+	if req.BankType != "" {
+		params["bank_type"] = req.BankType
+	}
+	if req.TotalFee != 0 {
+		params["total_fee"] = fmt.Sprintf("%d", req.TotalFee)
+	}
+	if req.FeeType != "" {
+		params["fee_type"] = req.FeeType
+	}
+	if req.CashFee != 0 {
+		params["cash_fee"] = fmt.Sprintf("%d", req.CashFee)
+	}
+	if req.CashFeeType != "" {
+		params["cash_fee_type"] = req.CashFeeType
+	}
+	if req.TradeState != "" {
+		params["trade_state"] = req.TradeState
+	}
+	if req.CouponFee != 0 {
+		params["coupon_fee"] = fmt.Sprintf("%d", req.CouponFee)
+	}
+	if req.CouponCount != 0 {
+		params["coupon_count"] = fmt.Sprintf("%d", req.CouponCount)
+	}
+	if req.CouponID != "" {
+		params["coupon_id_0"] = req.CouponID
+	}
+	if req.CouponFeeN != 0 {
+		params["coupon_fee_0"] = fmt.Sprintf("%d", req.CouponFeeN)
+	}
+	if req.TransactionID != "" {
+		params["transaction_id"] = req.TransactionID
+	}
+	if req.OutTradeNo != "" {
+		params["out_trade_no"] = req.OutTradeNo
+	}
+	if req.Attach != "" {
+		params["attach"] = req.Attach
+	}
+	if req.TimeEnd != "" {
+		params["time_end"] = req.TimeEnd
+	}
+	if req.ContractID != "" {
+		params["contract_id"] = req.ContractID
+	}
+
+	// 排序 key
+	var keys []string
+	for k := range params {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	// 拼接字符串
+	var buf strings.Builder
+	for _, k := range keys {
+		buf.WriteString(k)
+		buf.WriteString("=")
+		buf.WriteString(params[k])
+		buf.WriteString("&")
+	}
+	buf.WriteString("key=")
+	buf.WriteString(s.APIKey)
+
+	// MD5
+	hash := md5.Sum([]byte(buf.String()))
+	expectedSign := strings.ToUpper(hex.EncodeToString(hash[:]))
+
+	if expectedSign != req.Sign {
+		return fmt.Errorf("sign verification failed")
+	}
+	return nil
+}

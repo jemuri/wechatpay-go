@@ -55,3 +55,27 @@ type ContractOrderResponse struct {
 	MwebURL                string `xml:"mweb_url,omitempty"`                 // 支付跳转链接
 	OutTradeNo             string `xml:"out_trade_no,omitempty"`             // 商户订单号
 }
+
+// ContractNotifyRequest 签约、解约结果通知请求
+type ContractNotifyRequest struct {
+	ReturnCode              string `xml:"return_code"`                         // 返回状态码
+	ReturnMsg               string `xml:"return_msg,omitempty"`                // 返回信息
+	ResultCode              string `xml:"result_code,omitempty"`               // 业务结果
+	MchID                   string `xml:"mch_id,omitempty"`                    // 商户号
+	ContractCode            string `xml:"contract_code,omitempty"`             // 签约协议号
+	PlanID                  string `xml:"plan_id,omitempty"`                   // 模板id
+	OpenID                  string `xml:"openid,omitempty"`                    // 用户标识
+	Sign                    string `xml:"sign,omitempty"`                      // 签名
+	ChangeType              string `xml:"change_type,omitempty"`               // 变更类型 ADD:签约 DELETE:解约
+	OperateTime             string `xml:"operate_time,omitempty"`              // 操作时间
+	ContractID              string `xml:"contract_id,omitempty"`               // 委托代扣协议id
+	ContractExpiredTime     string `xml:"contract_expired_time,omitempty"`     // 协议到期时间
+	ContractTerminationMode int    `xml:"contract_termination_mode,omitempty"` // 协议解约方式
+	RequestSerial           int64  `xml:"request_serial,omitempty"`            // 请求序列号
+}
+
+// ContractNotifyResponse 签约、解约结果通知响应
+type ContractNotifyResponse struct {
+	ReturnCode string `xml:"return_code"`          // 返回状态码
+	ReturnMsg  string `xml:"return_msg,omitempty"` // 返回信息
+}

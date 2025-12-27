@@ -287,3 +287,108 @@ func (s *ContractOrderApiService) doRequest(ctx context.Context, xmlStr string) 
 	client := &http.Client{}
 	return client.Do(req)
 }
+
+// HandleContractNotify 处理签约、解约结果通知
+func (s *ContractOrderApiService) HandleContractNotify(ctx context.Context, req *http.Request) (*ContractNotifyRequest, *ContractNotifyResponse, error) {
+	// 读取请求体
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		return nil, nil, fmt.Errorf("read request body failed: %w", err)
+	}
+	defer req.Body.Close()
+
+	// 解析 XML
+	var notifyReq ContractNotifyRequest
+	err = xml.Unmarshal(body, &notifyReq)
+	if err != nil {
+		return nil, nil, fmt.Errorf("unmarshal request failed: %w", err)
+	}
+
+	// 验证签名
+	if notifyReq.ReturnCode == "SUCCESS" && notifyReq.ResultCode == "SUCCESS" {
+		if err := s.verifyNotifySign(&notifyReq); err != nil {
+			return nil, nil, fmt.Errorf("verify sign failed: %w", err)
+		}
+	}
+
+	// 返回成功响应
+	response := &ContractNotifyResponse{
+		ReturnCode: "SUCCESS",
+		ReturnMsg:  "OK",
+	}
+
+	return &notifyReq, response, nil
+}
+
+// verifyNotifySign 验证通知签名
+func (s *ContractOrderApiService) verifyNotifySign(req *ContractNotifyRequest) error {
+	// 将结构体转换为 map，只对非空参数参与签名
+	params := make(map[string]string)
+
+	if req.ReturnCode != "" {
+		params["return_code"] = req.ReturnCode
+	}
+	if req.ReturnMsg != "" {
+		params["return_msg"] = req.ReturnMsg
+	}
+	if req.ResultCode != "" {
+		params["result_code"] = req.ResultCode
+	}
+	if req.MchID != "" {
+		params["mch_id"] = req.MchID
+	}
+	if req.ContractCode != "" {
+		params["contract_code"] = req.ContractCode
+	}
+	if req.PlanID != "" {
+		params["plan_id"] = req.PlanID
+	}
+	if req.OpenID != "" {
+		params["openid"] = req.OpenID
+	}
+	if req.ChangeType != "" {
+		params["change_type"] = req.ChangeType
+	}
+	if req.OperateTime != "" {
+		params["operate_time"] = req.OperateTime
+	}
+	if req.ContractID != "" {
+		params["contract_id"] = req.ContractID
+	}
+	if req.ContractExpiredTime != "" {
+		params["contract_expired_time"] = req.ContractExpiredTime
+	}
+	if req.ContractTerminationMode != 0 {
+		params["contract_termination_mode"] = fmt.Sprintf("%d", req.ContractTerminationMode)
+	}
+	if req.RequestSerial != 0 {
+		params["request_serial"] = fmt.Sprintf("%d", req.RequestSerial)
+	}
+
+	// 排序 key
+	var keys []string
+	for k := range params {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	// 拼接字符串
+	var buf strings.Builder
+	for _, k := range keys {
+		buf.WriteString(k)
+		buf.WriteString("=")
+		buf.WriteString(params[k])
+		buf.WriteString("&")
+	}
+	buf.WriteString("key=")
+	buf.WriteString(s.APIKey)
+
+	// MD5
+	hash := md5.Sum([]byte(buf.String()))
+	expectedSign := strings.ToUpper(hex.EncodeToString(hash[:]))
+
+	if expectedSign != req.Sign {
+		return fmt.Errorf("sign verification failed")
+	}
+	return nil
+}
